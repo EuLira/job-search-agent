@@ -217,6 +217,7 @@ def detect_geo_eligibility(job):
     return 0.75, "localização não especificada"
 
 
+_company_reputation_cache = {}
 
 
 
