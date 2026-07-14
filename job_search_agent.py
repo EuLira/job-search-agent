@@ -217,6 +217,22 @@ def detect_geo_eligibility(job):
     return 0.75, "localização não especificada"
 
 
+def detect_cert_penalty(job):
+    """Penaliza vagas que exigem certificações específicas que o candidato
+    não possui (a menos que estejam citadas como diferencial/desejável)."""
+    text = job.get("description", "").lower()
+    watch = PROFILE.get("certifications_watch", [])
+    held = PROFILE.get("certifications_held", [])
+    mentioned = [c for c in watch if c in text]
+    mentioned = [c for c in mentioned if not any(h in text for h in held if h.split()[0] in c)]
+    if not mentioned:
+        return 1.0, []
+    soft_signals = ["diferencial", "desejável", "will be a plus", "nice to have", "um diferencial"]
+    if any(s in text for s in soft_signals):
+        return 0.9, mentioned
+    return 0.65, mentioned
+
+
 _company_reputation_cache = {}
 
 
@@ -272,10 +288,22 @@ def compute_io(job, salary_str, salary_fits):
     core_ratio = len(found_core) / max(len(PROFILE["core_keywords"]), 1)
     secondary_ratio = len(found_secondary) / max(len(PROFILE["secondary_keywords"]), 1)
     title_score = title_match_score(job)
-    skill_score = min(1.0, core_ratio * 1.1 + secondary_ratio * 0.4 + title_score * 0.3)
+
+    text_lower = f"{job['title']} {job.get('description', '')}".lower()
+    mgmt_keywords = PROFILE.get("management_keywords", [])
+    found_mgmt = [k for k in mgmt_keywords if k in text_lower]
+    mgmt_ratio = len(found_mgmt) / max(len(mgmt_keywords), 1)
+
+    cert_factor, watched_certs = detect_cert_penalty(job)
+
+    skill_score = min(1.0, (
+        core_ratio * 0.9 + secondary_ratio * 0.3 +
+        mgmt_ratio * 1.1 + title_score * 0.3
+    )) * cert_factor
 
     modality = detect_modality(job)
-    modality_base = 1.0 - (MODALITY_RANK.get(modality, 3) / max(len(MODALITY_RANK) - 1, 1))
+    rank = MODALITY_RANK.get(modality, len(MODALITY_RANK) - 1)
+    modality_base = max(0.25, 1.0 - rank * 0.25)  # presencial ainda pontua 25%, não zera
     geo_factor, geo_label = detect_geo_eligibility(job)
     modality_score = modality_base * geo_factor
 
@@ -317,6 +345,10 @@ def compute_io(job, salary_str, salary_fits):
         motivos.append("benefícios relevantes citados")
     if geo_label == "provável exigência de residência fora do BR":
         motivos.append("⚠️ pode exigir residência fora do Brasil")
+    if found_mgmt:
+        motivos.append("forte perfil de gestão/liderança")
+    if cert_factor < 0.8:
+        motivos.append(f"⚠️ pode exigir certificação específica ({', '.join(watched_certs[:2])})")
 
     motivo = ", ".join(motivos).capitalize()
 
@@ -327,7 +359,7 @@ def compute_io(job, salary_str, salary_fits):
         "empresa_pct": round(company_score * 100, 1),
     }
 
-    return io, breakdown, motivo, modality, found_core + found_secondary
+    return io, breakdown, motivo, modality, found_core + found_secondary + found_mgmt
 
 
 # --------------------------------------------------------------------------
