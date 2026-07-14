@@ -51,7 +51,7 @@
     "home office assistance", "auxílio home office", "previdência privada",
     "stock options", "day off", "horário flexível"
   ],
-  "io_alert_threshold": 90,
+  "io_alert_threshold": 60,
   "minimum_score": 40,
   "salary_benchmark_table": {
     "junior": {"min": 2500, "max": 4500},
