@@ -1,0 +1,63 @@
+{
+  "target_titles": [
+    "Analista de Infraestrutura",
+    "Especialista de Infraestrutura",
+    "Infrastructure Analyst",
+    "Infrastructure Specialist",
+    "Tech Lead Infraestrutura",
+    "SysAdmin",
+    "Administrador de Sistemas",
+    "IT Infrastructure Analyst",
+    "IT Infrastructure Engineer",
+    "Systems Administrator"
+  ],
+  "core_keywords": [
+    "Windows Server", "Active Directory", "DNS", "DHCP", "ITIL", "ITSM",
+    "Zabbix", "Grafana", "PRTG", "Fortinet", "PowerShell", "Virtualização",
+    "Data Center", "Redes", "Google Workspace", "AppSheet", "No-Code",
+    "Capex", "Opex", "SLA", "Firewall"
+  ],
+  "secondary_keywords": [
+    "GLPI", "OTRS", "Zimbra", "Segurança perimetral", "Governança de TI",
+    "Gestão de fornecedores", "VMware", "Hyper-V", "Cloud", "AWS", "Azure",
+    "Linux", "VPN", "Switches", "Racks"
+  ],
+  "seniority_signals": {
+    "years_experience": 8,
+    "level": "senior",
+    "avoid_titles": ["estágio", "estagiário", "júnior", "trainee", "CTO", "diretor", "VP"]
+  },
+  "location": {
+    "city": "Fortaleza",
+    "state": "CE",
+    "country": "BR"
+  },
+  "modality_priority": ["remoto", "home office", "híbrido", "presencial"],
+  "salary_target": {
+    "min": 6000,
+    "max": 12000,
+    "currency": "BRL"
+  },
+  "io_weights": {
+    "compatibilidade_tecnica": 35,
+    "modalidade": 25,
+    "salario": 20,
+    "empresa_reputacao": 10,
+    "senioridade": 5,
+    "beneficios": 5
+  },
+  "beneficio_keywords": [
+    "plano de saúde", "vale refeição", "vale alimentação", "gympass",
+    "home office assistance", "auxílio home office", "previdência privada",
+    "stock options", "day off", "horário flexível"
+  ],
+  "io_alert_threshold": 90,
+  "minimum_score": 40,
+  "salary_benchmark_table": {
+    "junior": {"min": 2500, "max": 4500},
+    "pleno": {"min": 4500, "max": 7500},
+    "senior": {"min": 7000, "max": 13000},
+    "especialista": {"min": 9000, "max": 16000},
+    "tech_lead": {"min": 10000, "max": 18000}
+  }
+}
