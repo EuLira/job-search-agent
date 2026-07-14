@@ -9,7 +9,17 @@
     "Administrador de Sistemas",
     "IT Infrastructure Analyst",
     "IT Infrastructure Engineer",
-    "Systems Administrator"
+    "Systems Administrator",
+    "Analista de Suporte Sênior",
+    "Senior Support Analyst",
+    "Support Analyst Senior",
+    "Supervisor de TI",
+    "IT Supervisor",
+    "Coordenador de TI",
+    "Coordenador de Infraestrutura",
+    "IT Coordinator",
+    "Gestor de TI",
+    "IT Manager"
   ],
   "core_keywords": [
     "Windows Server", "Active Directory", "DNS", "DHCP", "ITIL", "ITSM",
@@ -21,6 +31,22 @@
     "GLPI", "OTRS", "Zimbra", "Segurança perimetral", "Governança de TI",
     "Gestão de fornecedores", "VMware", "Hyper-V", "Cloud", "AWS", "Azure",
     "Linux", "VPN", "Switches", "Racks"
+  ],
+  "management_keywords": [
+    "gestão de fornecedores", "gestão de contratos", "liderança técnica",
+    "liderança de equipe", "gestão de equipe", "orçamento", "Capex", "Opex",
+    "SLA", "negociação de contratos", "negociação", "avaliação técnica de propostas",
+    "governança de TI", "gestão de projetos", "gestão de TI", "compliance",
+    "redução de custos", "otimização de custos", "coordenação de equipe",
+    "gestão de crise", "continuidade de negócio"
+  ],
+  "certifications_held": [
+    "fortinet nse", "itil v3", "itil foundation"
+  ],
+  "certifications_watch": [
+    "ccna", "ccnp", "aws certified", "certified aws", "azure certified",
+    "microsoft certified", "vcp", "pmp", "cissp", "comptia security+",
+    "mcsa", "mcse", "cisco certified"
   ],
   "seniority_signals": {
     "years_experience": 8,
@@ -51,7 +77,7 @@
     "home office assistance", "auxílio home office", "previdência privada",
     "stock options", "day off", "horário flexível"
   ],
-  "io_alert_threshold": 60,
+  "io_alert_threshold": 90,
   "minimum_score": 40,
   "salary_benchmark_table": {
     "junior": {"min": 2500, "max": 4500},
