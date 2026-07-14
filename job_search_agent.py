@@ -188,7 +188,36 @@ def title_match_score(job):
     return best
 
 
-_company_reputation_cache = {}
+GEO_POSITIVE_TERMS = [
+    "brasil", "brazil", "latam", "latin america", "américa latina",
+    "worldwide", "anywhere", "global", "remote - anywhere", "remote worldwide",
+    "fortaleza", "ceará", "ceara", "são paulo", "sao paulo",
+]
+
+GEO_NEGATIVE_TERMS = [
+    "germany", "alemanha", "berlin", "münchen", "munich", "hamburg", "frankfurt",
+    "united kingdom", "uk", " london", "france", "paris", "netherlands", "amsterdam",
+    "spain", "españa", "madrid", "italy", "italia", "united states", "usa",
+    "us only", "eu only", "european union", "canada", "australia", "portugal",
+    "poland", "polska", "austria", "vienna", "switzerland", "zurich",
+    "must be based in", "must reside in", "must be located in",
+    "eligible to work in the eu", "eligible to work in the uk",
+    "authorized to work in the us", "visa sponsorship not available",
+]
+
+
+def detect_geo_eligibility(job):
+    """Retorna (fator 0-1, label) indicando se a vaga é compatível com
+    candidatos baseados no Brasil, com base na localização e na descrição."""
+    text = f"{job.get('location', '')} {job.get('description', '')}".lower()
+    if any(p in text for p in GEO_POSITIVE_TERMS):
+        return 1.0, "Brasil/Global"
+    if any(c in text for c in GEO_NEGATIVE_TERMS):
+        return 0.3, "provável exigência de residência fora do BR"
+    return 0.75, "localização não especificada"
+
+
+
 
 
 def get_company_reputation(company_name):
@@ -245,7 +274,9 @@ def compute_io(job, salary_str, salary_fits):
     skill_score = min(1.0, core_ratio * 1.1 + secondary_ratio * 0.4 + title_score * 0.3)
 
     modality = detect_modality(job)
-    modality_score = 1.0 - (MODALITY_RANK.get(modality, 3) / max(len(MODALITY_RANK) - 1, 1))
+    modality_base = 1.0 - (MODALITY_RANK.get(modality, 3) / max(len(MODALITY_RANK) - 1, 1))
+    geo_factor, geo_label = detect_geo_eligibility(job)
+    modality_score = modality_base * geo_factor
 
     salary_score = 1.0 if salary_fits else 0.4
 
@@ -283,6 +314,8 @@ def compute_io(job, salary_str, salary_fits):
         motivos.append(f"empresa avaliada {raw_rating}★")
     if found_benefits:
         motivos.append("benefícios relevantes citados")
+    if geo_label == "provável exigência de residência fora do BR":
+        motivos.append("⚠️ pode exigir residência fora do Brasil")
 
     motivo = ", ".join(motivos).capitalize()
 
